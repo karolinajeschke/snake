@@ -14,19 +14,22 @@ let tileSize = canvas.width/tileCount -2;
 
 let headX = 10;
 let headY=10;
+const snakeParts = [];
+let tailLength=2;
 
 let appleX=5;
 let appleY=5;
+
 let XVelocity=0;
 let YVelocity=0;
 
 //the higher the speed numb, the faster game it is then 
-
+//game loop
 function drawGame(){
-    clearScreen();
-    drawSnake();
     changeSnakePosition();
+    clearScreen();
     checkAppleCollision();
+    drawSnake();
     drawApple();
     //updates screen 1000/7 times per second thus it allows the user monouver the snake easier before moving to the higher difficulty level 
     setTimeout(drawGame,1000/speed)
@@ -39,11 +42,25 @@ function clearScreen(){
 function drawApple(){
     ctx.fillStyle='red';
     ctx.fillRect(appleX*tileCount,appleY*tileCount,tileSize,tileSize)
+
+    ctx.fillStyle='green';
+    ctx.fillRect()
 }
 function drawSnake(){
+
+    ctx.fillStyle="green";
+    for(let i =0; i < snakeParts;i++){
+       let part = snakeParts[i];
+       ctx.fillRect(part.x *tileCount,part.y* tileCount,tileSize,tileSize) 
+    }
+    snakeParts.push(new SnakePart(headX,headY));//put the itema at the end of the snake
+        if(snakeParts.length > tailLength){
+            snakeParts.shift(); //remove the furthers item from 
+        }
     ctx.fillStyle="orange";
-    ctx.fillRect(headX*tileCount, headY*tileCount,tileSize,tileSize)
-}& appleY===headY
+    ctx.fillRect(headX*tileCount, headY*tileCount,tileSize,tileSize);
+
+}
 function changeSnakePosition(){
     headX = headX+XVelocity;
     headY = headY+YVelocity
@@ -52,6 +69,7 @@ function checkAppleCollision(){
     if(appleX===headX && appleY===headY){
         appleX=Math.floor(Math.random()*tileCount);
         appleY=Math.floor(Math.random()*tileCount);
+        tailLength++
     }
 }
 document.body.addEventListener('keydown',keyDown);
